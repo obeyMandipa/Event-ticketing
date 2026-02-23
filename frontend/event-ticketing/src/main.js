@@ -4,4 +4,4 @@ import router from './router'
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:8080/api';
-createApp(App).mount('#app')
+createApp(App).use(router).mount('#app')
