@@ -38,8 +38,20 @@ app.post('/events', upload.single('image'), async (req, res) => {
 
 app.get('/events', async (req, res) => res.json(await event.find()));
 
+// fetch a single event by ID
+app.get('/events/:id', async (req, res) => {
+    try {
+        const eventDoc = await event.findById(req.params.id);
+        if (!eventDoc) return res.status(404).json({ error: 'Event not found' });
+        res.json(eventDoc);
+    } catch (err) {
+        res.status(400).json({ error: 'Invalid event ID' });
+    }
+});
+
 //client apis
-app.post('/purchase/:eventId', async (req, res) => {
+// seatId moved into path to match frontend
+app.post('/purchase/:eventId/:seatId', async (req, res) => {
     const {name, email} = req.body;
     const eventDoc = await event.findById(req.params.eventId);
     const seat = eventDoc.seats.id(req.params.seatId);
@@ -55,10 +67,10 @@ app.post('/purchase/:eventId', async (req, res) => {
         await ticketDoc.save();
 
         res.json({success: true, ticketId: ticketDoc._id, qrCodeData});
-        } else {
-            res.status(400).json({error: 'Seat unavailable' });
-        }
-    });
+    } else {
+        res.status(400).json({error: 'Seat unavailable' });
+    }
+});
 
 app.listen(5000, () => console.log('Server running on port 5000'));
 

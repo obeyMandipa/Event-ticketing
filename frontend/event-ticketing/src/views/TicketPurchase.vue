@@ -10,21 +10,22 @@
             <input v-model="form.email" type="email" placeholder="email" required>
 
             <div class="seats">
-                <button v-for="seat  in seats" :key="seat.id" 
+                <button v-for="seat  in availableSeats" :key="seat.id" 
                     @click="selectedSeat = seat.id"
                     :class = "{selected: selectedSeat === seat.id}"
                     type="button"
                 >
-                {{ seat.id }} (${seat.price})
+                {{ seat.id }} - ${{seat.price}}
                 </button>
             </div>
+
             <p v-if="!selectedSeat" class="error">Select a seat</p>
             <button type="submit" :disabled="!selectedSeat">Buy & Download Ticket ({{ event.price }})</button>
         </form>
 
         <!-- QR code display  -->
         <div v-if="ticket">
-            <h3>YOurticket</h3>
+            <h3>Yourticket</h3>
             <p>{{ ticket.userName }}- {{ ticket.seatId }}</p>
             <img :src="ticket.qrCodeUrl" alt="QR TIcket">
             <a :href="ticket.qrCodeUrl" download="ticket.png">Download QR Code</a>
@@ -47,7 +48,8 @@ export default {
     },
 
     async mounted () {
-        const {data} = await this.$axios.get(`/events/${eventId}`);
+        // use the ID passed through the route
+        const {data} = await this.$axios.get(`/events/${this.$route.params.eventId}`);
         this.event = data;
         this.availableSeats = data.seats.filter(s => s.available);
     },
@@ -57,9 +59,12 @@ export default {
             if (!this.selectedSeat) return;
 
             const {data} = await this.$axios.post(`/purchase/${this.event._id}/${this.selectedSeat}`, this.form);
-             if (data.success){
-                this.ticket = { userName: this.form.name, seatId: this.selectedSeat, qrCode: data.qrCode };
-             }
+            if (data.success) {
+                // backend returns qrCodeData
+                this.ticket = { userName: this.form.name, seatId: this.selectedSeat, qrCodeUrl: data.qrCodeData };
+            } else {
+                alert(data.error || 'Ticket purchase failed');
+            }
         }
     }
 }

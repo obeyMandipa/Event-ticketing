@@ -29,14 +29,16 @@
         <button type="submit">Create Event</button>
     </form>
 
-    <h2>Existing Events</h2>
+    <nav><router-link to="/">Browse events</router-link></nav>
+
+    <!-- <h2>Existing Events</h2>
     <div v-for="event in events" :key="event._id" class="event-card">
         <h3>{{ event.name }}</h3>
         <p>{{ event.description }}</p>
         <p>Date: {{ event.date }}</p>
         <p>Venue: {{ event.venue }}</p>
         <p>seats left: {{ event.seats.filter(s => s.available).length }}</p>
-    </div>
+    </div> -->
   </div>
 </template>
 
