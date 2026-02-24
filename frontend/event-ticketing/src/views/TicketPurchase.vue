@@ -9,8 +9,11 @@
             <input v-model="form.name" placeholder="full name" required>
             <input v-model="form.email" type="email" placeholder="email" required>
 
+
+            <p v-if="!selectedSeat" class="error">Select a seat</p>
+            
             <div class="seats">
-                <button v-for="seat  in availableSeats" :key="seat.id" 
+                <button v-for="seat in availableSeats" :key="seat.id" 
                     @click="selectedSeat = seat.id"
                     :class = "{selected: selectedSeat === seat.id}"
                     type="button"
@@ -19,8 +22,8 @@
                 </button>
             </div>
 
-            <p v-if="!selectedSeat" class="error">Select a seat</p>
-            <button type="submit" :disabled="!selectedSeat">Buy & Download Ticket ({{ event.price }})</button>
+           
+            <button type="submit" :disabled="!selectedSeat">Buy & Download Ticket (${{ event.price }})</button>
         </form>
 
         <!-- QR code display  -->
@@ -58,12 +61,16 @@ export default {
         async buyTickets (){
             if (!this.selectedSeat) return;
 
-            const {data} = await this.$axios.post(`/purchase/${this.event._id}/${this.selectedSeat}`, this.form);
-            if (data.success) {
-                // backend returns qrCodeData
-                this.ticket = { userName: this.form.name, seatId: this.selectedSeat, qrCodeUrl: data.qrCodeData };
-            } else {
-                alert(data.error || 'Ticket purchase failed');
+            try {
+                const {data} = await this.$axios.post(`/purchase/${this.event._id}/${this.selectedSeat}`, this.form);
+                if (data.success) {
+                    this.ticket = { userName: this.form.name, seatId: this.selectedSeat, qrCodeUrl: data.qrCodeData };
+                } else {
+                    alert(data.error || 'Ticket purchase failed');
+                }
+            } catch (err) {
+                console.error('purchase error', err);
+                alert('Purchase failed: ' + (err.response?.data?.error || err.message));
             }
         }
     }

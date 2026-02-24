@@ -54,7 +54,11 @@ app.get('/events/:id', async (req, res) => {
 app.post('/purchase/:eventId/:seatId', async (req, res) => {
     const {name, email} = req.body;
     const eventDoc = await event.findById(req.params.eventId);
-    const seat = eventDoc.seats.id(req.params.seatId);
+    if (!eventDoc) return res.status(404).json({ error: 'Event not found' });
+
+    // seats are stored with a custom `id` property, not as the subdocument _id
+    const seat = eventDoc.seats.find(s => s.id === req.params.seatId);
+    if (!seat) return res.status(404).json({ error: 'Seat not found' });
 
     if (seat.available) {
         seat.available = false;
