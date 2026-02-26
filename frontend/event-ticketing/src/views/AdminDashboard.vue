@@ -1,35 +1,48 @@
 <template>
-  <div class="admin">
-    <h1>Admin: Create Event</h1>
-    <form @submit.prevent="createEvent" enctype="multipart/form-data">
-        <div>
-            <label for="name">Event Name:</label>
-            <input type="text" id="name" v-model="form.name" required />
+  <div class="admin ">
+    <h1 class=" text-[50px] font-bold text-blue-400">Admin: Create Event</h1>
+    <form @submit.prevent="createEvent" enctype="multipart/form-data" class=" w-auto  space-y-5">
+        <div class="flex justify-between ">
+            <span class="form space-y-4 ">
+                <div>
+                    <div for="name">Event Name </div>
+                    <input class="input border-2 border-gray-300 w-[500px] align-left" placeholder="hey"  type="text" id="name" v-model="form.name" required />
+                </div>
+                <div>
+                    <div for="description">Description:</div>
+                    <textarea class="textarea border-1 border-gray-300 w-[500px]" id="description" v-model="form.description" required></textarea>
+                </div>
+                <div>
+                    <div for="date">Date:</div>
+                    <input class="input border-2 border-gray-300 w-[500px] " type="datetime-local"  id="date" v-model="form.date" required />
+                </div>
+                <div>
+                    <div for="venue">Venue:</div>
+                    <input class="input border-2 border-gray-300 w-[500px]" type="text" id="venue" v-model="form.venue" required />
+                </div>
+                <div>
+                    <div for="totalSeats">Total Seats:</div>
+                    <input class="input border-2 border-gray-300 w-[500px]" v-model="form.totalSeats" type="number" " required>        
+                </div>
+                <div>
+                    <div for="price">Price:</div>
+                    <input class="input border-2 border-gray-300 w-[500px]" type="number" id="price" v-model.number="form.price" step="0.01" required />
+                </div>
+            </span>
+            <span class="flex border m-auto w-[800px] h-[300px] justify-center items-center">
+                <input class="file-input file-input-ghost border-2 border-gray-300  " type="file" ref="image" accept="image/">
+            </span>
         </div>
-        <div>
-            <label for="description">Description:</label>
-            <textarea id="description" v-model="form.description" required></textarea>
+        
+        <div class="flex space-x-5">
+            <button type="submit" class="btn ">Create Event</button>
+            <nav><router-link to="/" class="btn">Browse events</router-link></nav>    
         </div>
-        <div>
-            <label for="date">Date:</label>
-            <input type="date" id="date" v-model="form.date" required />
-        </div>
-        <div>
-            <label for="venue">Venue:</label>
-            <input type="text" id="venue" v-model="form.venue" required />
-        </div>
-        <div>
-            <label for="totalSeats">Total Seats:</label>
-            <input v-model="form.totalSeats" type="number" placeholder="Total Seats" required>        </div>
-        <div>
-            <label for="price">Price:</label>
-            <input type="number" id="price" v-model.number="form.price" step="0.01" required />
-        </div>
-        <input type="file" ref="image" accept="image/">
-        <button type="submit">Create Event</button>
+        
     </form>
 
-    <nav><router-link to="/">Browse events</router-link></nav>
+
+    
 
     <!-- <h2>Existing Events</h2>
     <div v-for="event in events" :key="event._id" class="event-card">
@@ -40,6 +53,7 @@
         <p>seats left: {{ event.seats.filter(s => s.available).length }}</p>
     </div> -->
   </div>
+
 </template>
 
 <script>
@@ -81,13 +95,14 @@ export default {
     
 <style>
 
+
 .admin { 
-        max-width: 800px; 
         margin: 0 auto; 
+        /* background-color: blue; */
     }
-    .event-card { 
+    /* .event-card { 
         border: 1px solid #ccc;
         padding: 10px; margin: 10px 0; 
-    }
+    } */
     
 </style>

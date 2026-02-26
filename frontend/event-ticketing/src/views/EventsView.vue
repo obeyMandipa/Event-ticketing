@@ -1,15 +1,20 @@
 <template>
   <div >
-    <h1>Browse Events</h1>
-    <nav><router-link to="/admin">Admin Dashboard</router-link></nav>
-    <div v-for="event in events" :key="event._id" class="event">
-        <h2>{{ event.name }}</h2>
+    <h1 class=" text-[50px] font-bold text-blue-400">Events</h1>
+    <nav><router-link class="" to="/admin">Admin Dashboard</router-link></nav>
+    <div v-for="event in events" :key="event._id" class="event shadow-lg">
+    
+        <h2 class="text-[30px] text-blue-400">{{ event.name }}</h2>
         <p>{{ event.description }}</p>
-        <p>Date: {{ event.date }}</p>
+        <p class="text-[20px]">Date: {{ event.date }}</p>
         <p>Venue: {{ event.venue }}</p>
         <p>${{ event.price }}/seat ({{ event.seats.filter(s => s.available).length }} available)</p>
 
-        <router-link :to="`/purchase/${event._id}`" class="buy-btn">Buy tickets</router-link>
+        <div class="space-x-3">
+            <button class="btn">View event</button>
+            <router-link class="btn " :to="`/purchase/${event._id}`">Buy tickets</router-link>
+        </div>
+
     </div>
   </div>
 </template>
